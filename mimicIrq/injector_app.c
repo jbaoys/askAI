@@ -15,12 +15,14 @@ int main(int argc, char** argv) {
     int fd = open(SIM_HW_PATH, O_WRONLY);
     if (fd < 0) return 1;
 
-    unsigned int test_vector = 0xDEADBEEF;
-    write(fd, &test_vector, sizeof(test_vector));
-    usleep(0); // yield cpu
+    unsigned int test_vector = 0xDEADBEE0;
+    while (test_vector++ != 0xDEADBEEF) {
+        write(fd, &test_vector, sizeof(test_vector));
+        printf("[Injector] Fired interrupt vector 0x%08X\n", test_vector);
+        fflush(stdout);
+        usleep(1000); // yield cpu
+    }
     close(fd);
 
-    printf("[Injector] Fired interrupt vector 0xDEADBEEF\n");
-    fflush(stdout);
     return 0;
 }

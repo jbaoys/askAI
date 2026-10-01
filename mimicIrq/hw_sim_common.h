@@ -4,10 +4,12 @@
 #include <sys/stat.h>
 
 #ifdef TARGET_OS_VXWORKS
-  #include <pipeDrv.h>
+#include <pipeDrv.h>
+#define SIM_HW_PATH "/pipe/mock_interrupt_device"
+#else
+#define SIM_HW_PATH "/tmp/mock_interrupt_device"
 #endif
 
-#define SIM_HW_PATH "/pipe/mock_interrupt_device"
 
 void create_node(void) {
 #ifdef TARGET_OS_VXWORKS
