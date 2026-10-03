@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
 #include "hw_sim_common.h"
 
 int main(void) {
-    // 1. Ensure a clean node exists for the test run
-    destroy_node(); 
-    create_node();
-
     printf("[Listener] Opening %s (blocking mode)...\n", SIM_HW_PATH);
     int fd = open(SIM_HW_PATH, O_RDONLY);
-    if (fd < 0) return 1; // Test Failed
+    if (fd < 0) {
+        printf("Failed to open device:%s, return errno:(%d) - \"%s\"\n", SIM_HW_PATH, errno, strerror(errno));
+        return 1; // Test Failed
+    }
 
     unsigned int interrupt_vector = 0;
     printf("[Listener] Blocking on read()...\n");
